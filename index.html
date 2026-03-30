@@ -68,8 +68,8 @@ body{
 /* ===== Start Screen ===== */
 .start-screen{
   position:fixed;
-  top:50%;left:50%;
-  transform:translate(-50%,-50%);
+  top:28vh;left:50%;
+  transform:translateX(-50%);
   display:flex;flex-direction:column;align-items:center;
   text-align:center;
   max-width:360px;
@@ -115,6 +115,14 @@ body{
   width:100%;
   padding:0 24px calc(40px + env(safe-area-inset-bottom));
   z-index:50;
+}
+.tune-preview{
+  width:100px;height:100px;
+  border-radius:24px;
+  margin-bottom:36px;
+  box-shadow:0 4px 24px rgba(0,0,0,.4);
+  border:2px solid rgba(245,245,245,.08);
+  transition:background-color .1s ease-out;
 }
 .sliders{width:100%;max-width:400px;display:flex;flex-direction:column;gap:28px}
 .slider-group{display:flex;flex-direction:column;gap:10px}
@@ -249,6 +257,7 @@ input[type=range]::-moz-range-thumb{
 
   <!-- Tune Controls -->
   <div class="tune-controls hide" id="tuneControls" role="group" aria-label="Color adjustment sliders">
+    <div class="tune-preview" id="tunePreview"></div>
     <div class="sliders">
       <div class="slider-group">
         <div class="slider-label"><span>Hue</span><span class="val" id="hVal">0</span></div>
@@ -313,6 +322,7 @@ const dom = {
   startScreen:  $('startScreen'),
   startBtn:     $('startBtn'),
   tuneControls: $('tuneControls'),
+  tunePreview:  $('tunePreview'),
   confirmBtn:   $('confirmBtn'),
   resultScreen: $('resultScreen'),
   scoreValue:   $('scoreValue'),
@@ -469,16 +479,15 @@ function getPlayerHSL() {
   };
 }
 
-/** Update fullscreen background & dynamic slider gradients. */
+/** Update preview swatch & dynamic slider gradients. */
 function updatePreview() {
   const { h, s, l } = getPlayerHSL();
   dom.hVal.textContent = h;
   dom.sVal.textContent = s;
   dom.lVal.textContent = l;
 
-  // Fullscreen background
-  dom.colorBg.style.backgroundColor = `hsl(${h},${s}%,${l}%)`;
-  dom.colorBg.classList.remove('hidden');
+  // Color preview swatch (above sliders)
+  dom.tunePreview.style.backgroundColor = `hsl(${h},${s}%,${l}%)`;
 
   // Dynamic saturation gradient: grey → fully saturated
   dom.sliderS.style.background =
