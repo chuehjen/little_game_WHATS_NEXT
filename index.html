@@ -521,13 +521,14 @@ function startTune() {
   game.phase = 'tune';
   hideAll();
 
-  // Show fullscreen color background for live preview
-  dom.colorBg.classList.remove('hidden');
-
-  // Reset sliders to neutral position
-  dom.sliderH.value = 0;
-  dom.sliderS.value = 50;
+  // Reset sliders to neutral GRAY (S=0 so it's clearly not the target)
+  dom.sliderH.value = 180;
+  dom.sliderS.value = 0;
   dom.sliderL.value = 50;
+
+  // Set background to gray BEFORE showing, to prevent target color flash
+  dom.colorBg.style.backgroundColor = 'hsl(180,0%,50%)';
+  dom.colorBg.classList.remove('hidden');
   updatePreview();
 
   dom.tuneControls.classList.remove('hide');
