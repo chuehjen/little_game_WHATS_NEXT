@@ -1,6 +1,6 @@
 # WHAT'S NEXT
 
-A minimalist color memory game built as a single HTML file — no frameworks, no build tools, no dependencies.
+A minimalist color memory game — memorize a color, recreate it with HSL sliders, and test your color instinct across 3 rounds.
 
 ## How to Play
 
@@ -9,36 +9,54 @@ Each of the 3 rounds follows two phases:
 1. **Memorize** — A random color fills the screen for 3 seconds. Study it.
 2. **Tune** — The color disappears. You have 15 seconds to recreate it using Hue, Saturation, and Lightness sliders.
 
-Your score for each round (0.00–10.00) is calculated from the RGB Euclidean distance between the target color and your guess. The closer you get, the higher you score.
+Your score for each round (0.00–10.00) is calculated from the RGB Euclidean distance between the target color and your guess. The closer you get, the higher your score.
 
 ## Live Demo
 
-Play it here: **https://YOUR_USERNAME.github.io/whats-next/**
+Play it at: https://chuehjen.github.io/little_game_WHATS_NEXT/
+
+## Project Structure
+
+```
+├── src/
+│   ├── game.ts      # Core game logic + event binding
+│   ├── colors.ts    # Color utilities (hslToRgb, calcScore, randomColor)
+│   ├── scores.ts    # localStorage score persistence
+│   ├── ui.ts        # DOM manipulation, UI helpers
+│   └── types.ts     # TypeScript types
+├── tests/
+│   └── colors.test.ts  # Unit tests for color utilities
+├── index.html       # Vite entry point (HTML + CSS)
+├── vite.config.ts   # Vite configuration
+├── tsconfig.json    # TypeScript config (strict mode)
+├── build.mjs        # Bundles to single-file dist/index.html
+├── dist/            # Production build (GitHub Pages)
+└── package.json
+```
+
+## Development
+
+```bash
+npm install       # Install dependencies
+npm run dev       # Start dev server (Vite + HMR)
+npm run build     # Type-check + production build
+npm run bundle    # Build single-file dist/index.html for GitHub Pages
+npm run test      # Run unit tests
+npm run preview   # Preview production build locally
+```
 
 ## Deploy to GitHub Pages
 
-1. Create a new repository on GitHub (e.g. `whats-next`)
-2. Push this project:
-
 ```bash
-git init
-git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin git@github.com:YOUR_USERNAME/whats-next.git
-git push -u origin main
+npm run bundle    # Builds dist/index.html (single-file, zero dependencies)
+# Then push dist/index.html to GitHub Pages branch
 ```
-
-3. Go to **Settings → Pages** in your repository
-4. Under **Source**, select **Deploy from a branch**
-5. Choose **main** branch, root `/`, then click **Save**
-6. Your game will be live at `https://YOUR_USERNAME.github.io/whats-next/` within a minute
 
 ## Tech Stack
 
-- Vanilla HTML / CSS / JavaScript
-- [Space Grotesk](https://fonts.google.com/specimen/Space+Grotesk) typeface (via Google Fonts CDN)
-- Zero build steps — open `index.html` in any browser
+- TypeScript (strict mode) + Vite
+- Zero runtime dependencies
+- 20 unit tests (vitest)
 
 ## Scoring Algorithm
 
