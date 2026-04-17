@@ -4,9 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="theme-color" content="#000000">
-<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0a0a">
 <meta name="description" content="A color memory game — memorize, recreate, and score. 3 rounds, 30 seconds of pure color instinct.">
 <meta property="og:title" content="WHAT'S NEXT — Color Memory Game">
 <meta property="og:description" content="Memorize a color, recreate it with HSL sliders, and test your color instinct across 3 rounds.">
@@ -22,25 +21,23 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html,body{
   width:100%;height:100%;overflow:hidden;
-  background:#000000;
+  background:#0a0a0a;
   font-family:'Space Grotesk','Inter',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;
   color:#f5f5f5;
-  color-scheme:dark;
   -webkit-tap-highlight-color:transparent;
   overscroll-behavior:none;
   touch-action:manipulation;
 }
 body{
-  position:relative;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding-top:50px;
-  padding-bottom:50px;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
+
 /* ===== Countdown Timer ===== */
 .countdown{
   position:fixed;
-  top:70px;
-  right:20px;
+  top:calc(20px + env(safe-area-inset-top));
+  right:calc(20px + env(safe-area-inset-right));
   z-index:200;
   font-size:40px;
   font-weight:600;
@@ -54,8 +51,7 @@ body{
 
 /* ===== Full-screen Color Background ===== */
 .color-bg{
-  position:absolute;
-  top:50px;left:0;right:0;bottom:50px;
+  position:fixed;inset:0;
   z-index:1;
   transition:background-color .1s ease-out;
 }
@@ -72,8 +68,8 @@ body{
 /* ===== Start Screen ===== */
 .start-screen{
   position:fixed;
-  top:50%;left:50%;
-  transform:translate(-50%,-50%);
+  top:28vh;left:50%;
+  transform:translateX(-50%);
   display:flex;flex-direction:column;align-items:center;
   text-align:center;
   max-width:360px;
@@ -94,7 +90,7 @@ body{
   font-size:15px;line-height:1.6;
   color:rgba(245,245,245,.5);
   font-weight:300;
-  min-height:80px;
+  min-height:120px;
   margin-bottom:32px;
 }
 
@@ -119,10 +115,10 @@ body{
   bottom:0;left:0;right:0;
   display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
   width:100%;
-  padding:0 24px calc(60px + env(safe-area-inset-bottom));
+  padding:0 24px calc(40px + env(safe-area-inset-bottom));
   z-index:50;
 }
-.sliders{width:100%;max-width:400px;display:flex;flex-direction:column;gap:28px;margin-bottom:12px}
+.sliders{width:100%;max-width:400px;display:flex;flex-direction:column;gap:28px}
 .slider-group{display:flex;flex-direction:column;gap:10px}
 .slider-label{
   display:flex;justify-content:space-between;align-items:center;
@@ -147,7 +143,7 @@ input[type=range]{
     hsl(360,100%,50%));
 }
 #sliderS{background:linear-gradient(to right,#808080,#f5f5f5)}
-#sliderL{background:linear-gradient(to right,#000000,#808080,#f5f5f5)}
+#sliderL{background:linear-gradient(to right,#0a0a0a,#808080,#f5f5f5)}
 input[type=range]::-webkit-slider-thumb{
   -webkit-appearance:none;appearance:none;
   width:28px;height:28px;border-radius:50%;
@@ -165,11 +161,11 @@ input[type=range]::-moz-range-thumb{
 
 /* ===== Buttons ===== */
 .btn{
-  margin-top:48px;
+  margin-top:24px;
   min-width:160px;min-height:52px;
   padding:16px 40px;
   border:none;border-radius:14px;
-  background:#f5f5f5;color:#000000;
+  background:#f5f5f5;color:#0a0a0a;
   font-family:inherit;
   font-size:15px;font-weight:600;letter-spacing:1.5px;
   text-transform:uppercase;
@@ -188,7 +184,7 @@ input[type=range]::-moz-range-thumb{
 .result-screen{
   display:flex;flex-direction:column;align-items:center;
   text-align:center;gap:10px;
-  background:rgba(0,0,0,.8);
+  background:rgba(10,10,10,.8);
   backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
   border-radius:20px;
   padding:36px 32px 32px;
@@ -265,7 +261,7 @@ input[type=range]::-moz-range-thumb{
   position:relative;
   display:flex;flex-direction:column;align-items:center;
   text-align:center;
-  background:rgba(0,0,0,.85);
+  background:rgba(10,10,10,.85);
   backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
   border-radius:20px;
   padding:32px 28px 28px;
@@ -344,8 +340,6 @@ input[type=range]::-moz-range-thumb{
 </head>
 <body>
 
-<!-- safe area: body padding provides 50px black margins for Safari nav bars -->
-
 <div class="countdown hide" id="countdown" aria-live="polite" aria-label="Countdown timer"></div>
 <div class="color-bg hidden" id="colorBg" role="presentation"></div>
 <div class="memorize-hint" id="memorizeHint">Remember this color</div>
@@ -385,7 +379,7 @@ input[type=range]::-moz-range-thumb{
     <div class="score-value" id="scoreValue">0.00</div>
     <div class="color-compare" id="colorCompare">
       <div class="color-swatch" id="swatchTarget"></div>
-      <span class="color-arrow">&#8594;</span>
+      <span class="color-arrow">→</span>
       <div class="color-swatch" id="swatchPlayer"></div>
     </div>
     <div class="score-detail" id="scoreDetail"></div>
@@ -398,7 +392,6 @@ input[type=range]::-moz-range-thumb{
     <div class="score-value" id="finalScore">0.00</div>
     <div class="total-breakdown" id="totalBreakdown"></div>
     <button class="btn" id="restartBtn">Play Again</button>
-    <button class="btn-history" id="finalHistoryBtn">History</button>
   </div>
 
 </div>
@@ -414,7 +407,469 @@ input[type=range]::-moz-range-thumb{
 </div>
 
 <script>
+/* ============================================================
+   WHAT'S NEXT — Color Memory Game
+   A single-file H5 game. No dependencies.
+   ============================================================ */
 
+'use strict';
+
+/* ---- Constants ---- */
+const TOTAL_ROUNDS  = 3;
+const MEMORIZE_MS   = 3000;
+const TUNE_MS       = 15000;
+const MAX_RGB_DIST  = 44.167;   // normalizer for 0–10 scoring
+const TYPEWRITER_MS = 5000;
+
+/* ---- DOM Cache ---- */
+const $ = (id) => document.getElementById(id);
+const dom = {
+  countdown:    $('countdown'),
+  colorBg:      $('colorBg'),
+  memorizeHint: $('memorizeHint'),
+  startScreen:  $('startScreen'),
+  startBtn:     $('startBtn'),
+  tuneControls: $('tuneControls'),
+  confirmBtn:   $('confirmBtn'),
+  resultScreen: $('resultScreen'),
+  scoreValue:   $('scoreValue'),
+  scoreDetail:  $('scoreDetail'),
+  colorCompare: $('colorCompare'),
+  swatchTarget: $('swatchTarget'),
+  swatchPlayer: $('swatchPlayer'),
+  nextBtn:      $('nextBtn'),
+  finalScreen:  $('finalScreen'),
+  finalScore:   $('finalScore'),
+  totalBreakdown: $('totalBreakdown'),
+  restartBtn:   $('restartBtn'),
+  sliderH:      $('sliderH'),
+  sliderS:      $('sliderS'),
+  sliderL:      $('sliderL'),
+  hVal:         $('hVal'),
+  sVal:         $('sVal'),
+  lVal:         $('lVal'),
+  rulesText:    $('rulesText'),
+  historyBtn:   $('historyBtn'),
+  historyModal: $('historyModal'),
+  historyBackdrop: $('historyBackdrop'),
+  historyList:  $('historyList'),
+  historyClose: $('historyClose'),
+};
+
+/* ============================================================
+   Color Utilities
+   ============================================================ */
+
+/**
+ * Convert HSL to RGB.
+ * @param {number} h  Hue 0–360
+ * @param {number} s  Saturation 0–100
+ * @param {number} l  Lightness 0–100
+ * @returns {{r:number, g:number, b:number}}  Each channel 0–255
+ */
+function hslToRgb(h, s, l) {
+  h = ((h % 360) + 360) % 360;
+  s = Math.min(Math.max(s, 0), 100) / 100;
+  l = Math.min(Math.max(l, 0), 100) / 100;
+
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+  const m = l - c / 2;
+
+  let r, g, b;
+  if      (h < 60)  { r = c; g = x; b = 0; }
+  else if (h < 120) { r = x; g = c; b = 0; }
+  else if (h < 180) { r = 0; g = c; b = x; }
+  else if (h < 240) { r = 0; g = x; b = c; }
+  else if (h < 300) { r = x; g = 0; b = c; }
+  else              { r = c; g = 0; b = x; }
+
+  return {
+    r: Math.round((r + m) * 255),
+    g: Math.round((g + m) * 255),
+    b: Math.round((b + m) * 255),
+  };
+}
+
+/**
+ * Score player's color vs. target using RGB Euclidean distance.
+ * Returns 0.00–10.00 (higher = closer match).
+ */
+function calcScore(target, player) {
+  const t = hslToRgb(target.h, target.s, target.l);
+  const p = hslToRgb(player.h, player.s, player.l);
+  const d = Math.sqrt(
+    (t.r - p.r) ** 2 +
+    (t.g - p.g) ** 2 +
+    (t.b - p.b) ** 2
+  );
+  return Math.round(Math.max(0, 10 - d / MAX_RGB_DIST) * 100) / 100;
+}
+
+/**
+ * Generate a random, visually distinct color.
+ * Avoids extremely dark / light / desaturated colors.
+ */
+function randomColor() {
+  return {
+    h: Math.floor(Math.random() * 360),
+    s: 30 + Math.floor(Math.random() * 60),   // 30–89
+    l: 30 + Math.floor(Math.random() * 40),    // 30–69
+  };
+}
+
+/* ============================================================
+   Game State
+   ============================================================ */
+
+const game = {
+  round: 0,
+  scores: [],
+  target: null,
+  phase: 'start',   // start | memorize | tune | result | final
+};
+
+let timerEnd = 0;
+let timerInterval = null;
+
+/* ============================================================
+   Score Persistence (localStorage)
+   ============================================================ */
+
+const STORAGE_KEY = 'whatsnext_scores';
+
+/** Load saved scores from localStorage. Returns sorted array (desc). */
+function loadScores() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    if (!Array.isArray(arr)) return [];
+    return arr
+      .filter(e => typeof e.score === 'number')
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 10);
+  } catch { return []; }
+}
+
+/** Save a new score. Keeps top 10, sorted descending. */
+function saveScore(totalScore) {
+  const scores = loadScores();
+  scores.push({
+    score: Math.round(totalScore * 100) / 100,
+    date: Date.now(),
+  });
+  scores.sort((a, b) => b.score - a.score);
+  const top10 = scores.slice(0, 10);
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(top10)); } catch {}
+}
+
+/** Render the history list into the modal. */
+function renderHistory() {
+  const scores = loadScores();
+  if (scores.length === 0) {
+    dom.historyList.innerHTML = '<div class="history-empty">No records yet.<br>Play your first game!</div>';
+    return;
+  }
+  dom.historyList.innerHTML = scores.map((entry, i) => {
+    const dateStr = entry.date
+      ? new Date(entry.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      : '';
+    return `<div class="history-item">` +
+      `<span class="history-rank">#${i + 1}</span>` +
+      `<span class="history-date">${dateStr}</span>` +
+      `<span class="history-score">${entry.score.toFixed(2)}</span>` +
+    `</div>`;
+  }).join('');
+}
+
+function showHistory() {
+  renderHistory();
+  dom.historyModal.classList.add('open');
+}
+
+function hideHistory() {
+  dom.historyModal.classList.remove('open');
+}
+
+/* ============================================================
+   UI Helpers
+   ============================================================ */
+
+function hideAll() {
+  dom.startScreen.classList.add('hide');
+  dom.tuneControls.classList.add('hide');
+  dom.resultScreen.classList.add('hide');
+  dom.finalScreen.classList.add('hide');
+  dom.colorBg.classList.add('hidden');
+  dom.memorizeHint.classList.remove('show');
+  dom.countdown.classList.add('hide');
+  // Clean up animation classes to allow re-triggering
+  dom.startScreen.classList.remove('fade-in');
+  dom.tuneControls.classList.remove('fade-in');
+  dom.resultScreen.classList.remove('fade-in');
+  dom.finalScreen.classList.remove('fade-in');
+  clearInterval(timerInterval);
+}
+
+/** Animate a number from `from` to `to` with ease-out cubic. */
+function animateNumber(el, from, to, durationMs) {
+  const start = performance.now();
+  function step(now) {
+    const t = Math.min((now - start) / durationMs, 1);
+    const ease = 1 - (1 - t) ** 3;
+    el.textContent = (from + (to - from) * ease).toFixed(2);
+    if (t < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+/**
+ * 3-digit countdown display (e.g. 300→000 or 150→000).
+ * Uses setInterval + Date.now() so timing is unaffected by page visibility.
+ */
+function startCountdown(durationMs, maxDisplay, onEnd) {
+  dom.countdown.classList.remove('hide');
+  timerEnd = Date.now() + durationMs;
+  clearInterval(timerInterval);
+
+  function tick() {
+    const remaining = Math.max(0, timerEnd - Date.now());
+    const display = Math.round((remaining / durationMs) * maxDisplay);
+    dom.countdown.textContent = String(Math.max(0, display)).padStart(3, '0');
+
+    if (remaining <= 0) {
+      clearInterval(timerInterval);
+      dom.countdown.textContent = '000';
+      setTimeout(onEnd, 120);
+    }
+  }
+
+  timerInterval = setInterval(tick, 50);
+  tick();
+}
+
+/** Get current slider values as an HSL object. */
+function getPlayerHSL() {
+  return {
+    h: +dom.sliderH.value,
+    s: +dom.sliderS.value,
+    l: +dom.sliderL.value,
+  };
+}
+
+/** Update fullscreen background color & dynamic slider gradients. */
+function updatePreview() {
+  const { h, s, l } = getPlayerHSL();
+  dom.hVal.textContent = h;
+  dom.sVal.textContent = s;
+  dom.lVal.textContent = l;
+
+  // Fullscreen color background
+  dom.colorBg.style.backgroundColor = `hsl(${h},${s}%,${l}%)`;
+
+  // Dynamic saturation gradient: grey → fully saturated
+  dom.sliderS.style.background =
+    `linear-gradient(to right,hsl(${h},0%,${l}%),hsl(${h},100%,${l}%))`;
+
+  // Dynamic lightness gradient: black → mid → white
+  dom.sliderL.style.background =
+    `linear-gradient(to right,#0a0a0a,hsl(${h},${s}%,50%),#f5f5f5)`;
+}
+
+/* ============================================================
+   Game Phases
+   ============================================================ */
+
+function showStart() {
+  game.phase = 'start';
+  hideAll();
+  dom.startScreen.classList.remove('hide');
+  dom.startScreen.classList.add('fade-in');
+  typewriterEffect();
+}
+
+function startMemorize() {
+  game.phase = 'memorize';
+  game.target = randomColor();
+  const { h, s, l } = game.target;
+  hideAll();
+
+  dom.colorBg.style.backgroundColor = `hsl(${h},${s}%,${l}%)`;
+  dom.colorBg.classList.remove('hidden');
+  dom.memorizeHint.classList.add('show');
+
+  startCountdown(MEMORIZE_MS, 300, () => {
+    if (game.phase === 'memorize') startTune();
+  });
+}
+
+function startTune() {
+  game.phase = 'tune';
+  hideAll();
+
+  // Reset sliders to neutral GRAY (S=0 so it's clearly not the target)
+  dom.sliderH.value = 180;
+  dom.sliderS.value = 0;
+  dom.sliderL.value = 50;
+
+  // Set background to gray BEFORE showing, to prevent target color flash
+  dom.colorBg.style.backgroundColor = 'hsl(180,0%,50%)';
+  dom.colorBg.classList.remove('hidden');
+  updatePreview();
+
+  dom.tuneControls.classList.remove('hide');
+  dom.tuneControls.classList.add('fade-in');
+
+  startCountdown(TUNE_MS, 150, () => {
+    if (game.phase === 'tune') finishTune();
+  });
+}
+
+function finishTune() {
+  // Guard: prevent double execution
+  if (game.phase !== 'tune') return;
+  game.phase = '_finishing';
+  cancelAnimationFrame(timerRAF);
+  clearInterval(timerInterval);
+
+  const player = getPlayerHSL();
+  const score = calcScore(game.target, player);
+  game.scores.push(score);
+  showResult(score, player);
+}
+
+function showResult(score, player) {
+  game.phase = 'result';
+  hideAll();
+
+  dom.resultScreen.classList.remove('hide');
+  dom.resultScreen.classList.add('fade-in');
+
+  animateNumber(dom.scoreValue, 0, score, 600);
+
+  // Show color comparison swatches
+  const t = game.target;
+  dom.swatchTarget.style.background =
+    `hsl(${t.h},${t.s}%,${t.l}%)`;
+  dom.swatchPlayer.style.background =
+    `hsl(${player.h},${player.s}%,${player.l}%)`;
+
+  dom.scoreDetail.textContent =
+    `HSL(${t.h}, ${t.s}%, ${t.l}%)  →  HSL(${player.h}, ${player.s}%, ${player.l}%)`;
+
+  dom.nextBtn.textContent =
+    game.round < TOTAL_ROUNDS - 1 ? 'Next' : 'See Total';
+}
+
+function showFinal() {
+  game.phase = 'final';
+  hideAll();
+
+  dom.finalScreen.classList.remove('hide');
+  dom.finalScreen.classList.add('fade-in');
+
+  const total = game.scores.reduce((a, b) => a + b, 0);
+  animateNumber(dom.finalScore, 0, total, 800);
+
+  // Persist score to localStorage
+  saveScore(total);
+
+  dom.totalBreakdown.textContent =
+    game.scores.map((s, i) => `R${i + 1}: ${s.toFixed(2)}`).join('   ');
+}
+
+/* ---- Game Flow ---- */
+
+function startGame() {
+  game.round  = 0;
+  game.scores = [];
+  startMemorize();
+}
+
+function nextRound() {
+  game.round++;
+  if (game.round >= TOTAL_ROUNDS) showFinal();
+  else startMemorize();
+}
+
+/* ============================================================
+   Typewriter Effect
+   ============================================================ */
+
+const RULES_TEXT = [
+  'A color memory game in 3 rounds.',
+  'Each round, a color appears for 3 seconds. After it disappears, you have 15 seconds to recreate it.',
+  'Score is based on how close your color matches — up to 10.00 per round.',
+].join('\n');
+
+let typewriterTimer = null;
+
+function typewriterEffect() {
+  // Clear any previous typewriter run
+  if (typewriterTimer) { clearTimeout(typewriterTimer); typewriterTimer = null; }
+  dom.rulesText.innerHTML = '';
+  dom.startBtn.classList.add('hide');
+  dom.historyBtn.classList.add('hide');
+
+  let i = 0;
+  const charDelay = TYPEWRITER_MS / RULES_TEXT.length;
+
+  function type() {
+    if (i < RULES_TEXT.length) {
+      dom.rulesText.innerHTML =
+        RULES_TEXT.substring(0, i + 1).replace(/\n/g, '<br>') +
+        '<span class="cursor">|</span>';
+      i++;
+      typewriterTimer = setTimeout(type, charDelay);
+    } else {
+      dom.rulesText.innerHTML = RULES_TEXT.replace(/\n/g, '<br>');
+      dom.startBtn.classList.remove('hide');
+      dom.startBtn.classList.add('fade-in');
+      dom.historyBtn.classList.remove('hide');
+      dom.historyBtn.classList.add('fade-in');
+      typewriterTimer = null;
+    }
+  }
+  type();
+}
+
+/* ============================================================
+   Event Binding
+   ============================================================ */
+
+// Slider live update
+dom.sliderH.addEventListener('input', updatePreview);
+dom.sliderS.addEventListener('input', updatePreview);
+dom.sliderL.addEventListener('input', updatePreview);
+
+dom.startBtn.addEventListener('click', () => {
+  if (game.phase === 'start') startGame();
+});
+
+dom.confirmBtn.addEventListener('click', () => {
+  if (game.phase === 'tune') finishTune();
+});
+
+dom.nextBtn.addEventListener('click', nextRound);
+
+dom.restartBtn.addEventListener('click', showStart);
+
+// History modal
+dom.historyBtn.addEventListener('click', showHistory);
+dom.historyClose.addEventListener('click', hideHistory);
+dom.historyBackdrop.addEventListener('click', hideHistory);
+
+// Prevent iOS rubber-band scroll (except on sliders)
+document.addEventListener('touchmove', (e) => {
+  if (e.target.tagName !== 'INPUT') e.preventDefault();
+}, { passive: false });
+
+/* ============================================================
+   Init
+   ============================================================ */
+
+showStart();
 </script>
 </body>
 </html>
