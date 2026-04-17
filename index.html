@@ -4,8 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0a0a0a">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#000000">
+<meta name="color-scheme" content="dark">
 <meta name="description" content="A color memory game — memorize, recreate, and score. 3 rounds, 30 seconds of pure color instinct.">
 <meta property="og:title" content="WHAT'S NEXT — Color Memory Game">
 <meta property="og:description" content="Memorize a color, recreate it with HSL sliders, and test your color instinct across 3 rounds.">
@@ -21,23 +22,25 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html,body{
   width:100%;height:100%;overflow:hidden;
-  background:#0a0a0a;
+  background:#000000;
   font-family:'Space Grotesk','Inter',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;
   color:#f5f5f5;
+  color-scheme:dark;
   -webkit-tap-highlight-color:transparent;
   overscroll-behavior:none;
   touch-action:manipulation;
 }
 body{
+  position:relative;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  padding-top:50px;
+  padding-bottom:50px;
 }
-
 /* ===== Countdown Timer ===== */
 .countdown{
   position:fixed;
-  top:calc(20px + env(safe-area-inset-top));
-  right:calc(20px + env(safe-area-inset-right));
+  top:70px;
+  right:20px;
   z-index:200;
   font-size:40px;
   font-weight:600;
@@ -51,7 +54,8 @@ body{
 
 /* ===== Full-screen Color Background ===== */
 .color-bg{
-  position:fixed;inset:0;
+  position:absolute;
+  top:50px;left:0;right:0;bottom:50px;
   z-index:1;
   transition:background-color .1s ease-out;
 }
@@ -68,8 +72,8 @@ body{
 /* ===== Start Screen ===== */
 .start-screen{
   position:fixed;
-  top:28vh;left:50%;
-  transform:translateX(-50%);
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
   display:flex;flex-direction:column;align-items:center;
   text-align:center;
   max-width:360px;
@@ -115,10 +119,10 @@ body{
   bottom:0;left:0;right:0;
   display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
   width:100%;
-  padding:0 24px calc(40px + env(safe-area-inset-bottom));
+  padding:0 24px calc(60px + env(safe-area-inset-bottom));
   z-index:50;
 }
-.sliders{width:100%;max-width:400px;display:flex;flex-direction:column;gap:28px}
+.sliders{width:100%;max-width:400px;display:flex;flex-direction:column;gap:28px;margin-bottom:12px}
 .slider-group{display:flex;flex-direction:column;gap:10px}
 .slider-label{
   display:flex;justify-content:space-between;align-items:center;
@@ -143,7 +147,7 @@ input[type=range]{
     hsl(360,100%,50%));
 }
 #sliderS{background:linear-gradient(to right,#808080,#f5f5f5)}
-#sliderL{background:linear-gradient(to right,#0a0a0a,#808080,#f5f5f5)}
+#sliderL{background:linear-gradient(to right,#000000,#808080,#f5f5f5)}
 input[type=range]::-webkit-slider-thumb{
   -webkit-appearance:none;appearance:none;
   width:28px;height:28px;border-radius:50%;
@@ -161,11 +165,11 @@ input[type=range]::-moz-range-thumb{
 
 /* ===== Buttons ===== */
 .btn{
-  margin-top:24px;
+  margin-top:48px;
   min-width:160px;min-height:52px;
   padding:16px 40px;
   border:none;border-radius:14px;
-  background:#f5f5f5;color:#0a0a0a;
+  background:#f5f5f5;color:#000000;
   font-family:inherit;
   font-size:15px;font-weight:600;letter-spacing:1.5px;
   text-transform:uppercase;
@@ -184,7 +188,7 @@ input[type=range]::-moz-range-thumb{
 .result-screen{
   display:flex;flex-direction:column;align-items:center;
   text-align:center;gap:10px;
-  background:rgba(10,10,10,.8);
+  background:rgba(0,0,0,.8);
   backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
   border-radius:20px;
   padding:36px 32px 32px;
@@ -261,7 +265,7 @@ input[type=range]::-moz-range-thumb{
   position:relative;
   display:flex;flex-direction:column;align-items:center;
   text-align:center;
-  background:rgba(10,10,10,.85);
+  background:rgba(0,0,0,.85);
   backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
   border-radius:20px;
   padding:32px 28px 28px;
@@ -340,6 +344,8 @@ input[type=range]::-moz-range-thumb{
 </head>
 <body>
 
+<!-- safe area: body padding provides 50px black margins for Safari nav bars -->
+
 <div class="countdown hide" id="countdown" aria-live="polite" aria-label="Countdown timer"></div>
 <div class="color-bg hidden" id="colorBg" role="presentation"></div>
 <div class="memorize-hint" id="memorizeHint">Remember this color</div>
@@ -379,7 +385,7 @@ input[type=range]::-moz-range-thumb{
     <div class="score-value" id="scoreValue">0.00</div>
     <div class="color-compare" id="colorCompare">
       <div class="color-swatch" id="swatchTarget"></div>
-      <span class="color-arrow">→</span>
+      <span class="color-arrow">&#8594;</span>
       <div class="color-swatch" id="swatchPlayer"></div>
     </div>
     <div class="score-detail" id="scoreDetail"></div>
@@ -392,6 +398,7 @@ input[type=range]::-moz-range-thumb{
     <div class="score-value" id="finalScore">0.00</div>
     <div class="total-breakdown" id="totalBreakdown"></div>
     <button class="btn" id="restartBtn">Play Again</button>
+    <button class="btn-history" id="finalHistoryBtn">History</button>
   </div>
 
 </div>
@@ -442,6 +449,7 @@ const dom = {
   finalScore:   $('finalScore'),
   totalBreakdown: $('totalBreakdown'),
   restartBtn:   $('restartBtn'),
+  finalHistoryBtn: $('finalHistoryBtn'),
   sliderH:      $('sliderH'),
   sliderS:      $('sliderS'),
   sliderL:      $('sliderL'),
@@ -674,7 +682,7 @@ function updatePreview() {
 
   // Dynamic lightness gradient: black → mid → white
   dom.sliderL.style.background =
-    `linear-gradient(to right,#0a0a0a,hsl(${h},${s}%,50%),#f5f5f5)`;
+    `linear-gradient(to right,#000000,hsl(${h},${s}%,50%),#f5f5f5)`;
 }
 
 /* ============================================================
@@ -730,7 +738,6 @@ function finishTune() {
   // Guard: prevent double execution
   if (game.phase !== 'tune') return;
   game.phase = '_finishing';
-  cancelAnimationFrame(timerRAF);
   clearInterval(timerInterval);
 
   const player = getPlayerHSL();
@@ -859,6 +866,7 @@ dom.restartBtn.addEventListener('click', showStart);
 dom.historyBtn.addEventListener('click', showHistory);
 dom.historyClose.addEventListener('click', hideHistory);
 dom.historyBackdrop.addEventListener('click', hideHistory);
+dom.finalHistoryBtn.addEventListener('click', showHistory);
 
 // Prevent iOS rubber-band scroll (except on sliders)
 document.addEventListener('touchmove', (e) => {
