@@ -363,7 +363,7 @@ input[type=range]::-moz-range-thumb{
       </div>
       <div class="slider-group">
         <div class="slider-label"><span>Saturation</span><span class="val" id="sVal">50</span></div>
-        <input type="range" id="sliderS" min="0" max="100" value="0" aria-label="Saturation">
+        <input type="range" id="sliderS" min="0" max="100" value="50" aria-label="Saturation">
       </div>
       <div class="slider-group">
         <div class="slider-label"><span>Lightness</span><span class="val" id="lVal">50</span></div>
@@ -706,7 +706,7 @@ function startMemorize() {
   dom.colorBg.classList.remove('hidden');
   dom.memorizeHint.classList.add('show');
 
-  startCountdown(MEMORIZE_MS, 300, () => {
+  startCountdown(MEMORIZE_MS, 30, () => {
     if (game.phase === 'memorize') startTune();
   });
 }
