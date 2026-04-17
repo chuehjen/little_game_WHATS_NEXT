@@ -334,13 +334,6 @@ input[type=range]::-moz-range-thumb{
 .hide{display:none!important}
 .fade-in{animation:fadeIn .4s ease}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.cursor{
-  display:inline-block;
-  animation:blink .6s step-end infinite;
-  color:rgba(245,245,245,.4);
-  font-weight:300;
-}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 </style>
 </head>
 <body>
@@ -430,7 +423,7 @@ const TOTAL_ROUNDS  = 3;
 const MEMORIZE_MS   = 3000;
 const TUNE_MS       = 15000;
 const MAX_RGB_DIST  = 44.167;   // normalizer for 0–10 scoring
-const TYPEWRITER_MS = 8000;
+const TYPEWRITER_MS = 8000; // removed, keep for reference
 
 /* ---- DOM Cache ---- */
 const $ = (id) => document.getElementById(id);
@@ -697,9 +690,10 @@ function updatePreview() {
 function showStart() {
   game.phase = 'start';
   hideAll();
+  dom.rulesText.classList.remove('fade-in');
   dom.startScreen.classList.remove('hide');
   dom.startScreen.classList.add('fade-in');
-  typewriterEffect();
+  showRules();
 }
 
 function startMemorize() {
@@ -806,44 +800,18 @@ function nextRound() {
 }
 
 /* ============================================================
-   Typewriter Effect
+   Rules Text — simple fade-in, no typewriter
    ============================================================ */
 
-const RULES_TEXT = [
-  'A color memory game in 3 rounds.',
-  'Each round, a color appears for 3 seconds. After it disappears, you have 15 seconds to recreate it.',
-  'Score is based on how close your color matches — up to 10.00 per round.',
-].join('\n');
+const RULES_HTML = `A color memory game in 3 rounds.<br>Each round, a color appears for 3 seconds. After it disappears, you have 15 seconds to recreate it.<br>Score is based on how close your color matches — up to 10.00 per round.`;
 
-let typewriterTimer = null;
-
-function typewriterEffect() {
-  // Clear any previous typewriter run
-  if (typewriterTimer) { clearTimeout(typewriterTimer); typewriterTimer = null; }
-  dom.rulesText.innerHTML = '';
-  dom.startBtn.classList.add('hide');
-  dom.historyBtn.classList.add('hide');
-
-  let i = 0;
-  const charDelay = TYPEWRITER_MS / RULES_TEXT.length;
-
-  function type() {
-    if (i < RULES_TEXT.length) {
-      dom.rulesText.innerHTML =
-        RULES_TEXT.substring(0, i + 1).replace(/\n/g, '<br>') +
-        '<span class="cursor">|</span>';
-      i++;
-      typewriterTimer = setTimeout(type, charDelay);
-    } else {
-      dom.rulesText.innerHTML = RULES_TEXT.replace(/\n/g, '<br>');
-      dom.startBtn.classList.remove('hide');
-      dom.startBtn.classList.add('fade-in');
-      dom.historyBtn.classList.remove('hide');
-      dom.historyBtn.classList.add('fade-in');
-      typewriterTimer = null;
-    }
-  }
-  type();
+function showRules() {
+  dom.rulesText.innerHTML = RULES_HTML;
+  dom.rulesText.classList.add('fade-in');
+  dom.startBtn.classList.remove('hide');
+  dom.startBtn.classList.add('fade-in');
+  dom.historyBtn.classList.remove('hide');
+  dom.historyBtn.classList.add('fade-in');
 }
 
 /* ============================================================
