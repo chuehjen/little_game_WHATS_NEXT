@@ -94,7 +94,8 @@ body{
   font-size:15px;line-height:1.6;
   color:rgba(245,245,245,.5);
   font-weight:300;
-  min-height:120px;
+  height:120px;
+  overflow:hidden;
   margin-bottom:32px;
 }
 
@@ -332,7 +333,7 @@ input[type=range]::-moz-range-thumb{
 /* ===== Utility ===== */
 .hide{display:none!important}
 .fade-in{animation:fadeIn .4s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .cursor{
   display:inline-block;
   animation:blink .6s step-end infinite;
@@ -369,7 +370,7 @@ input[type=range]::-moz-range-thumb{
       </div>
       <div class="slider-group">
         <div class="slider-label"><span>Saturation</span><span class="val" id="sVal">50</span></div>
-        <input type="range" id="sliderS" min="0" max="100" value="50" aria-label="Saturation">
+        <input type="range" id="sliderS" min="0" max="100" value="0" aria-label="Saturation">
       </div>
       <div class="slider-group">
         <div class="slider-label"><span>Lightness</span><span class="val" id="lVal">50</span></div>
@@ -398,7 +399,10 @@ input[type=range]::-moz-range-thumb{
     <div class="score-value" id="finalScore">0.00</div>
     <div class="total-breakdown" id="totalBreakdown"></div>
     <button class="btn" id="restartBtn">Play Again</button>
-    <button class="btn-history" id="finalHistoryBtn">History</button>
+    <div style="display:flex;gap:12px;margin-top:12px">
+      <button class="btn-history" id="finalHistoryBtn">History</button>
+      <button class="btn-history" id="finalHomeBtn">Home</button>
+    </div>
   </div>
 
 </div>
@@ -426,7 +430,7 @@ const TOTAL_ROUNDS  = 3;
 const MEMORIZE_MS   = 3000;
 const TUNE_MS       = 15000;
 const MAX_RGB_DIST  = 44.167;   // normalizer for 0–10 scoring
-const TYPEWRITER_MS = 5000;
+const TYPEWRITER_MS = 8000;
 
 /* ---- DOM Cache ---- */
 const $ = (id) => document.getElementById(id);
@@ -450,6 +454,7 @@ const dom = {
   totalBreakdown: $('totalBreakdown'),
   restartBtn:   $('restartBtn'),
   finalHistoryBtn: $('finalHistoryBtn'),
+  finalHomeBtn:   $('finalHomeBtn'),
   sliderH:      $('sliderH'),
   sliderS:      $('sliderS'),
   sliderL:      $('sliderL'),
@@ -860,7 +865,13 @@ dom.confirmBtn.addEventListener('click', () => {
 
 dom.nextBtn.addEventListener('click', nextRound);
 
-dom.restartBtn.addEventListener('click', showStart);
+dom.restartBtn.addEventListener('click', () => {
+  if (game.phase === 'final') startGame();
+});
+
+dom.finalHomeBtn.addEventListener('click', () => {
+  if (game.phase === 'final') showStart();
+});
 
 // History modal
 dom.historyBtn.addEventListener('click', showHistory);
